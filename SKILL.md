@@ -13,6 +13,21 @@ Every project Abhi takes on has ONE non-negotiable standard:
 This is the baseline. Not aspirational. Claude treats every project as if it will be
 showcased in a portfolio and reviewed by a senior engineer.
 
+### NON-NEGOTIABLE WRITING RULE — NO EM DASHES
+
+**Em dashes are banned across every project, every file, every output.**
+This means: no `—` in copy, UI text, headings, labels, tooltips, error messages,
+documentation, code comments, commit messages, or any other deliverable.
+
+Use one of these instead:
+- A comma: "We build sites, fast" not "We build sites — fast"
+- A colon: "One goal: results" not "One goal — results"
+- A semicolon: "We ship; you grow" not "We ship — you grow"
+- Parentheses: "The plan (approved last week) is live"
+- Split into two sentences
+
+This rule has no exceptions. If you find an em dash anywhere, replace it.
+
 ---
 
 ## HOW TO INVOKE
