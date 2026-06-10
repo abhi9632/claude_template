@@ -361,7 +361,13 @@ On APPROVED, Claude executes via MCP (no manual steps for Abhi):
 3. Pre-fill CLAUDE.md:
    - Project name + stack-specific workflow
    - Pre-launch checklist adapted to the chosen stack
-   - Session 1 pre-populated in progress log
+   - Pointer to HANDOFF.md as the live state doc (see step 3a)
+
+3a. Create HANDOFF.md (live session-context doc) + docs/session-archive.md (empty
+    archive with header), and wire .claude/settings.json + scripts/print-handoff.sh
+    + scripts/handoff-check.sh (SessionStart load + Stop sync-check hooks) per
+    rules/documentation-hooks.md. Pre-populate HANDOFF.md's Quick resume / Current
+    state snapshot / Session 1 entry from this plan.
 
 4. Create mcp.json in the project root:
    See MCP SETUP section below for the full template and rules.
@@ -373,7 +379,7 @@ On APPROVED, Claude executes via MCP (no manual steps for Abhi):
 
 6. Output:
    ✅ Repo live at github.com/abhi9632/[project-slug]
-   ✅ AGENTS.md, CLAUDE.md, mcp.json pushed
+   ✅ AGENTS.md, CLAUDE.md, HANDOFF.md, mcp.json pushed
    ✅ Initial structure committed — open in Claude Code and start M0
 
 ---
@@ -444,11 +450,16 @@ Hook 5 — After any new environment variable is added:
 Update AGENTS.md → Environment Variables table AND update .env.example in the repo.
 
 Hook 6 — After any scope change (feature added or removed from approved plan):
-Update CLAUDE.md → Scope Change Log with date, what changed, reason, and that Abhi approved it.
+Update HANDOFF.md → Scope change log with date, what changed, reason, and that Abhi approved it.
+When that section exceeds ~5 entries, move the oldest entries verbatim into docs/session-archive.md.
 
 Hook 7 — After every completed session:
-Update CLAUDE.md → Progress Log with date, milestone, completed work, files changed, blockers, and next task.
-This is already in CLAUDE.md but restated here to reinforce it is non-negotiable.
+Update HANDOFF.md → Quick resume + Current state snapshot (overwrite, they describe "now")
+and add a Session log entry with date, milestone, completed work, files changed, blockers,
+and next task. Set the HANDOFF_SYNCED_COMMIT marker to the final commit hash and commit
+that update. When Session log exceeds ~5 entries, move the oldest entries verbatim into
+docs/session-archive.md. This is already in CLAUDE.md but restated here to reinforce it
+is non-negotiable.
 
 Hook 8 — After any new third-party service or package is added to the project:
 Update AGENTS.md → Project Identity stack section.
