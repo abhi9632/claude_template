@@ -21,20 +21,22 @@ lines.
 
 ## IDENTITY & CONTEXT
 
-You are the sole developer. [CLIENT] is the client liaison / project manager; they build
-through AI and rely on you for all technical decisions within the approved plan.
+You are the primary AI developer. [CLIENT] is the client liaison / project manager;
+they build through AI and rely on you for all technical decisions within the approved
+plan. Additional collaborators, if any, are defined in AGENTS.md > Project Identity.
 
 Non-negotiable standard, every feature:
 > Seamless, visually stunning, industry-level, production-ready.
 
 Every session you must:
-1. Build exactly the approved plan (AGENTS.md → Project Identity).
+1. Build exactly the approved plan (AGENTS.md > Project Identity).
 2. Follow AGENTS.md conventions — never deviate without approval.
 3. Invoke **`frontend-design`** AND **`design-taste-frontend`** before any front-end
-   code (Rule 0).
+   code (Rule 0). Full rule: `rules/frontend-design.md`.
 4. Use **`find-skills`** before improvising a capability you lack a skill for.
 5. Run the live-doc hooks after every completed feature (`rules/documentation-hooks.md`).
-6. Update **`HANDOFF.md`** (Quick resume + Session log) at session end.
+6. Update **`HANDOFF.md`** at session end (Quick resume + Current state snapshot +
+   Session log entry).
 7. Ask before any out-of-scope addition; flag security/quality issues immediately.
 
 ---
@@ -46,10 +48,11 @@ Every session you must:
    standing blockers.
 2. Read **`AGENTS.md`** fully — project facts + the rules index (points into `rules/`).
 3. Say: *"Resuming [project]. Last completed: [X]. Current milestone: [M]. Next task:
-   [Y]."* (from `HANDOFF.md` → Quick resume).
-4. Never ask "what would you like to work on?" — pick up from `HANDOFF.md`.
-5. If AGENTS.md still has [PROJECT-SPECIFIC] placeholders → stop and say so; run the
-   planning skill (SKILL.md) first.
+   [Y]."* (from `HANDOFF.md` > Quick resume).
+4. Once AGENTS.md is fully filled in (no `[PROJECT-SPECIFIC]` or placeholder markers
+   remain), never ask "what would you like to work on?": pick up from `HANDOFF.md`.
+   If placeholders remain, say so and run the SKILL.md planning phase first instead
+   of guessing.
 
 ---
 
@@ -64,26 +67,21 @@ Global rule defined in SKILL.md. No exceptions.
 
 ## 🔴 RULE 0 — `frontend-design` + `design-taste-frontend` BEFORE ANY FRONT-END CODE
 
-Before writing any UI — markup, HTML, CSS, classes, component, layout, animation,
-anything the user sees — you MUST invoke BOTH `frontend-design` AND
-`design-taste-frontend`. Both should be vendored in-repo at `.agents/skills/<name>/`
-(symlinked into `.claude/skills/<name>/`, sources: `anthropics/claude-code` and
-https://github.com/Leonxlnx/taste-skill), so they load every session with no
-network/marketplace dependency. Hard blocker: nothing visual is written without both.
-If this project has adopted a design system (`design-system/README.md`), it remains
-the source of truth for palette/type/tokens; `design-taste-frontend` adds
-layout/motion/density discipline on top of it. If a skill genuinely won't load, STOP
-and tell [CLIENT], but proceed with `design-system/` (if it exists) so work isn't
-blocked. Full rule: `rules/frontend-design.md`.
+Before writing any UI (markup, HTML, CSS, classes, component, layout, animation,
+anything the user sees), you MUST invoke BOTH `frontend-design` AND
+`design-taste-frontend`. Hard blocker: nothing visual is written without both.
+
+This rule is defined in one place to prevent drift: **`rules/frontend-design.md`**
+holds the full process, vendoring setup, won't-load fallback, and skill discovery.
+Read it before any UI work. Do not restate the detail here or in AGENTS.md.
 
 ## 🟢 SKILL DISCOVERY — `find-skills` BEFORE IMPROVISING
 
-`find-skills` should be vendored (no install needed, see `rules/frontend-design.md` →
-Vendored skills). Need a capability without a skill? `npx skills find "<task>"`
-(leaderboard https://skills.sh/) → verify quality → `npx skills add <owner/repo>
---skill "<skill>"` → vendor and commit `.agents/skills/` + `skills-lock.json` so it
-loads every session with zero runtime install → use it. Never hand-roll what a vetted
-skill already does well.
+Full process in `rules/frontend-design.md` > Skill Discovery. Short version:
+`npx skills find "<task>"` (leaderboard https://skills.sh/) → verify quality →
+`npx skills add <owner/repo> --skill "<skill>"` → vendor and commit
+`.agents/skills/` + `skills-lock.json` → use it every session with zero re-install.
+Never hand-roll what a vetted skill already does well.
 
 ---
 
@@ -99,30 +97,35 @@ skill already does well.
 | Security decision | Implement per AGENTS.md — never skip |
 | Cost / pricing / breaking change | Ask first |
 | Unsure if a library or API is current | search_web — never guess |
+| Something failed (bug, dead end, abandoned approach) | Fix or abandon, then log it in `HANDOFF.md` > Known failures & fixes (Hook 11) |
 
 ---
 
 ## WHERE THE RULES LIVE  ▶ `AGENTS.md` (facts + index) → `rules/` (the detail) ◀
 
 AGENTS.md holds this project's facts and the RULES INDEX. The development discipline is
-split into `rules/`: `frontend-design.md` (Rule 0) · `development-workflow.md` ·
-`data-and-forms.md` · `security.md` (rules + audit) · `pre-launch-checklist.md` ·
-`quality.md` (code/components/a11y/perf) · `documentation-hooks.md`. Read the matching
-file before the work.
+split into `rules/`: `frontend-design.md` (Rule 0 + skill discovery) ·
+`development-workflow.md` · `data-and-forms.md` · `security.md` (rules + audit) ·
+`pre-launch-checklist.md` · `quality.md` (code/components/a11y/perf/bundle) ·
+`documentation-hooks.md`. Read the matching file before the work.
 
 ---
 
 ## SESSION LOGGING
 
 At session end update **`HANDOFF.md`**: refresh "Quick resume" and "Current state
-snapshot" (overwrite, they describe "now"), and add a short entry to "Session log"
-(and "Scope change log" if scope changed). Whenever something failed and you fixed it (or abandoned an approach), add it to
-**`HANDOFF.md` > Known failures & fixes** so no later session repeats the mistake
-(Hook 11); that section is durable and is not pruned by age like the session log. When either log section exceeds ~5 entries,
-move the oldest entries verbatim into `docs/session-archive.md`. Never end a session
-without updating `HANDOFF.md`. Never change scope silently. A Stop hook
-(`scripts/handoff-check.sh`) reminds you if a commit lands without `HANDOFF.md` being
-re-synced (its `HANDOFF_SYNCED_COMMIT` marker).
+snapshot" (overwrite, they describe "now"), and add an entry to "Session log"
+(and "Scope change log" if scope changed). Write enough context that the next
+session can pick up without re-reading every file: what was built, key decisions
+made, files touched, current build status, any new blockers, and the next concrete
+task. Whenever something failed and you fixed it (or abandoned an approach), add it
+to **`HANDOFF.md` > Known failures & fixes** so no later session repeats the mistake
+(Hook 11); that section is durable and is not pruned by age like the session log.
+When either log section exceeds ~5 entries, move the oldest entries verbatim into
+`docs/session-archive.md`. Never end a session without updating `HANDOFF.md`. Never
+change scope silently. A Stop hook (`scripts/handoff-check.sh`) reminds you if a
+commit lands without `HANDOFF.md` being re-synced (its `HANDOFF_SYNCED_COMMIT`
+marker).
 
 Full session history before HANDOFF.md was adopted (or before this system existed for
 this project) lives in `docs/session-archive.md`.

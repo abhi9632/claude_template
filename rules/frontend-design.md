@@ -13,9 +13,10 @@ in order:**
 Both should be **vendored in this repo** at `.agents/skills/<name>/SKILL.md`
 (symlinked into `.claude/skills/<name>/` for Claude Code's Skill tool), see "Vendored
 skills" below. Invoke both via the Skill tool / `/frontend-design` and
-`/design-taste-frontend`. The vendored copies are independent of the `frontend-design`
-marketplace plugin entry in `.claude/settings.json` (kept as a secondary path); the
-vendored copy is the one guaranteed to load every session with no network dependency.
+`/design-taste-frontend`. The vendored copies are the guaranteed path; they load every
+session with no network dependency. The `frontend-design` marketplace plugin entry in
+`.claude/settings.json` is a legacy fallback and can be removed once vendoring is
+confirmed working.
 
 "Front-end code" = any HTML, CSS, utility/Tailwind classes, view-layer JS/TS,
 JSX/TSX/`.astro`/`.vue`/`.svelte` markup, component, layout, animation, or
@@ -34,15 +35,22 @@ visual/styling change, anything the user sees. If in doubt, it counts.
   and tell [CLIENT], but proceed using `design-system/` (if it exists) so work isn't
   blocked, see "Vendored skills" troubleshooting below.
 
-**Process:** invoke `frontend-design` → invoke `design-taste-frontend` → if this
+**Process:** invoke `frontend-design` -> invoke `design-taste-frontend` -> if this
 project has a design system (`design-system/README.md`), follow it: do not improvise a
-different aesthetic, typography, colour, motion or spatial composition → build the
+different aesthetic, typography, colour, motion or spatial composition -> build the
 markup/styles using ONLY this project's design tokens (mirrored in
-`design-system/tokens/` if adopted) → for new components, check
-`design-system/components/*.prompt.md` for an existing spec before inventing one →
-cover every visual state (default, hover/focus, loading, error, empty, success) →
-respect accessibility and `prefers-reduced-motion` → follow this project's content
-rules (casing, voice, punctuation) from `design-system/README.md` if adopted.
+`design-system/tokens/` if adopted) -> for new components, check
+`design-system/components/*.prompt.md` for an existing spec before inventing one. If
+no spec exists yet (new component, the folder is empty, or no design system is
+adopted), design it from `design-system/README.md` foundations (or from
+`design-taste-frontend`'s discipline alone if no design system exists), build it, then
+write a new `<ComponentName>.prompt.md` in `design-system/components/` following the
+`_TEMPLATE.prompt.md` pattern and add it to the Components table in
+`design-system/README.md` (Hook 2 + Hook 10) so the next session reuses it instead of
+reinventing it -> cover every visual state (default, hover/focus, loading, error,
+empty, success) -> respect accessibility and `prefers-reduced-motion` -> follow this
+project's content rules (casing, voice, punctuation) from `design-system/README.md`
+if adopted.
 
 ## 🟡 VENDORED SKILLS — install once, commit, never re-fetch at runtime
 
@@ -80,8 +88,8 @@ step needed. When a task needs a capability you don't already have a skill for:
 1. `npx skills find "<task or domain>"` (leaderboard: https://skills.sh/), or use the
    vendored `find-skills` skill directly.
 2. Prefer battle-tested, official skills (high install counts, reputable source).
-3. `npx skills add <owner/repo> --skill "<skill-name>"` → vendor and commit it (see
-   "Vendored skills" above) so it loads every session with no re-install → use it.
+3. `npx skills add <owner/repo> --skill "<skill-name>"` -> vendor and commit it (see
+   "Vendored skills" above) so it loads every session with no re-install -> use it.
 
 Never hand-roll what a vetted skill already does well; never guess when a skill could
 tell you.

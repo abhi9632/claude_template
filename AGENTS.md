@@ -30,32 +30,24 @@ Any new service added triggers Hook 8 — update this section immediately.
 
 ## MANDATORY SKILLS
 
-- **RULE 0 (blocking):** invoke BOTH `frontend-design` AND `design-taste-frontend`
-  BEFORE any front-end/UI code. Full rule: `rules/frontend-design.md`.
-- **Vendored skills:** external skills installed via `npx skills add <source> --skill
-  "<name>"` are committed in-repo at `.agents/skills/<name>/SKILL.md` plus
-  `skills-lock.json` (the `.claude/skills/<name>/` symlink Claude Code reads is
-  generated/gitignored), so they load every session with no network/marketplace
-  dependency. Recommended on every project: `frontend-design`
-  (`anthropics/claude-code`), `design-taste-frontend`
-  (https://github.com/Leonxlnx/taste-skill), `find-skills` (`vercel-labs/skills`).
-- **Skill discovery:** `find-skills`, once vendored, needs no install. Need a
-  capability without a skill? Use it (or `npx skills find "<task>"`), then vendor and
-  commit any new skill the same way. See `rules/frontend-design.md`.
+Rule 0 (`frontend-design` + `design-taste-frontend` before any front-end/UI code),
+the vendored-skill setup, and skill discovery (`find-skills`) are defined in one
+place: **`rules/frontend-design.md`**. Read it before any UI work or before reaching
+for a new external skill. Do not restate the detail here.
 
 ---
 
 ## RULES INDEX  ▶ the development discipline lives in `rules/` — read the matching file ◀
 
-| When you are… | Read |
-|---------------|------|
+| When you are... | Read |
+|-----------------|------|
 | Starting ANY session | `HANDOFF.md` (live state: where we left off, what's next, blockers) |
 | Writing any front-end / UI code | `rules/frontend-design.md` (Rule 0 + skill discovery) |
 | Building any feature | `rules/development-workflow.md` (build order + Week-One) |
 | Fetching/rendering data, or building a form | `rules/data-and-forms.md` |
 | Touching anything security-relevant | `rules/security.md` (rules + production audit) |
 | Preparing to deploy / launch | `rules/pre-launch-checklist.md` |
-| Writing components / styles / checking a11y + perf | `rules/quality.md` |
+| Writing components / styles / checking a11y + perf + bundle | `rules/quality.md` |
 | Finishing a feature (keep docs live) | `rules/documentation-hooks.md` |
 | Branching / deploying / going live | `DEPLOYMENT.md` (create per project) |
 
@@ -78,20 +70,19 @@ client assets are pending, and must be clearly marked.)
 
 ## DEPLOYMENT & ENVIRONMENTS  ▶ Per-project runbook: `DEPLOYMENT.md` ◀
 
-Three-tier flow — the live domain ONLY ever serves `main`. Never edit `main` directly;
-go live by promoting `develop → main`.
+Branching model and environment details live in `DEPLOYMENT.md` (create per project).
+The default three-tier pattern is: `feature/*` (one task, per-commit preview) >
+`develop` (staging, access-gated) > `main` (production, public after launch).
+Never edit `main` directly; go live by promoting `develop -> main`.
 
-| Branch      | Role               | Hosting env          | Visibility              |
-|-------------|--------------------|----------------------|-------------------------|
-| `main`      | Production / live  | Custom domain        | Public — after launch   |
-| `develop`   | Staging (default)  | Preview (gated)      | You only (access-gated) |
-| `feature/*` | One task           | Preview (per-commit) | You only (access-gated) |
+> If this project has not yet created `DEPLOYMENT.md`, keep the concrete branch
+> table here temporarily and move it once `DEPLOYMENT.md` exists, so the branch
+> model has exactly one source of truth.
 
 - Gate preview/staging so the client/public/crawlers can't see WIP. Attach the real
   domain ONLY at launch.
 - Env vars set PER ENVIRONMENT (production vs preview); secrets never client-exposed.
 - CI gates builds/type-checks before anything reaches live.
-- Going live = promote `develop → main` (direct merge / one click) — no PR friction.
 - Commit identity: in a cloud agent, set git author via a SessionStart hook so commits
   show as the developer, not the agent.
 
@@ -105,15 +96,15 @@ docs/session-archive.md             full history of older sessions/scope changes
 design-system/                      design system reference (README, tokens/, components/) once adopted
 [PROJECT-SPECIFIC — fill in the chosen framework's source structure]
 rules/                              development discipline (see RULES INDEX)
-.agents/skills/<name>/SKILL.md       vendored skills (committed) + skills-lock.json
+.agents/skills/<name>/SKILL.md      vendored skills (committed) + skills-lock.json
 .claude/settings.json               (enables frontend-design plugin + SessionStart/Stop hooks:
                                      git identity, HANDOFF.md auto-load, HANDOFF.md sync check)
-scripts/cloud-git-identity.sh, print-handoff.sh, handoff-check.sh
+scripts/cloud-git-identity.sh, print-handoff.sh, handoff-check.sh, validate-governance.sh
 DEPLOYMENT.md, .env.example, .mcp.json  (create per project as needed)
 ```
 
-Mandatory: a custom 404, a SafeImage/fallback, Skeleton components, error-tracking wiring,
-and a global error boundary (static-site equivalent: client error capture + 404).
+Mandatory: a custom 404; framework-appropriate equivalents for safe image handling,
+loading skeletons, and error boundaries; error-tracking wired on both client and server.
 
 ---
 
@@ -128,8 +119,9 @@ and a global error boundary (static-site equivalent: client error capture + 404)
 
 ## DATABASE RULES
 
-[PROJECT-SPECIFIC. If a DB exists: IDOR/RLS, session-scoped queries, migrations (Hook 4).
- If none/delegated: state it + the equivalent obligation — verify the provider is hardened.]
+[PROJECT-SPECIFIC. If a DB exists: IDOR/RLS, session-scoped queries only, migrations
+(Hook 4), encryption for PII. If none/delegated: state it explicitly + verify the
+provider's security posture and document the result in AGENTS.md under Auth or here.]
 
 ---
 
@@ -190,15 +182,16 @@ machine-consumed token set. **All front-end work goes through `frontend-design` 
 canonical tokens, not improvise new colours/fonts/spacing.**
 Hook 10 updates this section AND `design-system/README.md` after any token change. Swap
 checklist when assets arrive:
-1. Colour tokens 2. Fonts 3. Logo in Header/Footer 4. favicon + OG image 5. media.
+1. Colour tokens 2. Fonts 3. Logo in primary layout components 4. favicon + OG image
+5. Media assets.
 
 ---
 
 ## ERROR TRACKING SETUP
 
 Tool: [PROJECT-SPECIFIC — MANDATORY]. Client + server capture, environment tag,
-release = git SHA, source maps uploaded privately. Verify before M0 complete (throw →
-confirm in dashboard → delete temp route → commit).
+release = git SHA, source maps uploaded privately. Verify before M0 complete (throw ->
+confirm in dashboard -> delete temp route -> commit).
 
 ---
 
