@@ -213,3 +213,5 @@ confirm in dashboard → delete temp route → commit).
 - Do NOT skip the security audit before launch — it is a release gate.
 - Do NOT let the .md files fall out of sync — run the hooks after every feature, and
   update `HANDOFF.md` at session end (Hook 7).
+- Do NOT re-hit a known dead-end: check `HANDOFF.md` > Known failures & fixes before
+  starting work, and log any new failure plus its fix there (Hook 11).

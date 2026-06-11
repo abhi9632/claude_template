@@ -12,7 +12,10 @@ HANDOFF.md: the live, single-source-of-truth context file for this project.
   OVERWRITTEN each session (they describe "now", not history). "Session log"
   and "Scope change log" are append-then-prune: when either grows past ~5
   entries, move the oldest entries verbatim into docs/session-archive.md and
-  delete them from here.
+  delete them from here. "Known failures & fixes" is DIFFERENT: it is durable
+  and curated, NOT pruned by age. An entry stays until the trap is permanently
+  impossible (e.g. the tech it concerns is gone), because the whole point is
+  that an old mistake is the one a future session would otherwise repeat.
 
 HANDOFF_SYNCED_COMMIT: [none yet, set this after the first commit that updates
 this file, see rules/documentation-hooks.md Hook 7]
@@ -64,6 +67,18 @@ file relevant to the task, then `design-system/README.md` if doing any UI work
 
 - [e.g. hosting project not yet connected to the repo]
 - [e.g. third-party account setup, API key/DSN verification, final copy/photos pending]
+
+## Known failures & fixes (do not repeat)
+
+Durable, curated list of mistakes and dead-ends already hit, and how each was
+resolved, so no future session repeats them. UNLIKE the session log, this is NOT
+pruned by age: an entry stays until the trap is permanently impossible. Keep each
+entry to 2-3 lines: symptom -> root cause -> fix / how to avoid. Add an entry
+whenever something fails and you fix or abandon it (rules/documentation-hooks.md
+Hook 11).
+
+- [None yet. Format: YYYY-MM-DD - what failed (symptom) - root cause - the fix and
+  how to avoid it next time.]
 
 ## Session log (most recent first, keep entries to about 5 lines each)
 

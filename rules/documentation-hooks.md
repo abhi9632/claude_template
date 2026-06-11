@@ -16,6 +16,7 @@ stale AGENTS.md is as dangerous as none.
 | 8 | New service / package | `AGENTS.md` identity + `.env.example` + `.mcp.json` |
 | 9 | Security-relevant change | re-check `rules/security.md` / `rules/pre-launch-checklist.md` |
 | 10 | Design-system change | `AGENTS.md` → Design System **and** `design-system/README.md` |
+| 11 | Something failed and you fixed or abandoned it | `HANDOFF.md` → Known failures & fixes (durable; NOT pruned by age) |
 
 `HANDOFF.md` is auto-loaded into context at the start of every session by the
 `SessionStart` hook (`scripts/print-handoff.sh`). It is the live pointer to every other

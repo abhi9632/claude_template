@@ -1,0 +1,47 @@
+# build output
+dist/
+build/
+.output/
+.next/
+.vercel/
+.netlify/
+
+# framework caches
+.astro/
+.turbo/
+.cache/
+
+# dependencies
+node_modules/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# environment variables: NEVER commit real secrets
+.env
+.env.local
+.env.*.local
+.env.production
+
+# NOTE: .mcp.json IS committed if added: it should contain only env-var
+# references (e.g. ${GITHUB_TOKEN}), never real tokens. Real values live in
+# your shell or .env.local.
+
+# Claude Code skill symlinks (regenerated locally by `npx skills add`;
+# .agents/skills/ + skills-lock.json are the committed source of truth,
+# see rules/frontend-design.md > Vendored skills)
+.claude/skills/
+
+# macOS / editor
+.DS_Store
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# error tracking
+.sentryclirc

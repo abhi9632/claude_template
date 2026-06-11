@@ -116,7 +116,9 @@ file before the work.
 
 At session end update **`HANDOFF.md`**: refresh "Quick resume" and "Current state
 snapshot" (overwrite, they describe "now"), and add a short entry to "Session log"
-(and "Scope change log" if scope changed). When either log section exceeds ~5 entries,
+(and "Scope change log" if scope changed). Whenever something failed and you fixed it (or abandoned an approach), add it to
+**`HANDOFF.md` > Known failures & fixes** so no later session repeats the mistake
+(Hook 11); that section is durable and is not pruned by age like the session log. When either log section exceeds ~5 entries,
 move the oldest entries verbatim into `docs/session-archive.md`. Never end a session
 without updating `HANDOFF.md`. Never change scope silently. A Stop hook
 (`scripts/handoff-check.sh`) reminds you if a commit lands without `HANDOFF.md` being
