@@ -11,8 +11,14 @@ stale AGENTS.md is as dangerous as none.
 | 3 | New API route / server action | `AGENTS.md` → API Routes |
 | 4 | Schema change | `AGENTS.md` → Database Schema + migration note |
 | 5 | New env variable | `AGENTS.md` → Environment Variables **and** `.env.example` |
-| 6 | Scope change | `CLAUDE.md` → Scope Change Log |
-| 7 | End of session | `CLAUDE.md` → Progress Log |
-| 8 | New service / package | `AGENTS.md` identity + `.env.example` + mcp.json |
+| 6 | Scope change | `HANDOFF.md` → Scope change log (prune oldest into `docs/session-archive.md` past ~5 entries) |
+| 7 | End of session | `HANDOFF.md` → Quick resume + Current state snapshot (overwrite) + Session log entry. Set `HANDOFF_SYNCED_COMMIT` to the final commit hash and commit that update (the `Stop` hook `scripts/handoff-check.sh` checks this). |
+| 8 | New service / package | `AGENTS.md` identity + `.env.example` + `.mcp.json` |
 | 9 | Security-relevant change | re-check `rules/security.md` / `rules/pre-launch-checklist.md` |
-| 10 | Design-system change | `AGENTS.md` → Design System |
+| 10 | Design-system change | `AGENTS.md` → Design System **and** `design-system/README.md` |
+
+`HANDOFF.md` is auto-loaded into context at the start of every session by the
+`SessionStart` hook (`scripts/print-handoff.sh`). It is the live pointer to every other
+doc (document map at the top of the file): `CLAUDE.md`, `AGENTS.md`, `rules/*.md`,
+`design-system/README.md`, `DEPLOYMENT.md`, `SKILL.md`, `docs/session-archive.md`. Keep
+that map and the cross-links accurate when adding or renaming docs.

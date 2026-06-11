@@ -7,13 +7,18 @@
 - CSP-safe scripts; no inline event handlers. Tear down listeners/timers on navigation.
 
 ## Component authoring
-> **RULE 0 (blocking):** invoke `frontend-design` BEFORE any front-end/UI code
-> (`rules/frontend-design.md`). No improvised UI.
+> **RULE 0 (blocking):** invoke `frontend-design` AND `design-taste-frontend` BEFORE
+> any front-end/UI code (`rules/frontend-design.md`). No improvised UI: if a design
+> system is adopted, follow `design-system/`.
 
 1. One component per file, named after what it renders. 2. Typed `Props` interface.
-3. No inline styles — scoped styles or utility classes. 4. Every interactive element:
-keyboard support + visible focus + aria-label. 5. Touch targets ≥ 44×44px.
-6. No hardcoded brand text where avoidable. 7. Respect `prefers-reduced-motion`.
+3. No inline styles — scoped styles or utility classes, using only the project's design
+tokens. 4. Every interactive element: keyboard support + visible focus + aria-label.
+5. Touch targets ≥ 44×44px. 6. No hardcoded brand text where avoidable; follow the
+content rules in `design-system/README.md` if adopted. 7. Respect
+`prefers-reduced-motion`. 8. Before building a new UI primitive (card, tag, badge,
+pricing tier, etc.), check `design-system/components/*.prompt.md` for an existing spec
+and follow it (if a design system is adopted).
 
 ## Accessibility (MANDATORY)
 WCAG 2.1 AA. Skip-to-main link, descriptive alt, labelled inputs, focus-visible, 4.5:1
