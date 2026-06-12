@@ -1,7 +1,7 @@
 # CLAUDE.md — Session Bootstrap (TEMPLATE)
 
-> 🔵 **Read `HANDOFF.md` FIRST, every session.** It auto-loads via the SessionStart
-> hook. This file holds only the non-negotiables that never change session to session.
+> 🔵 **Read `HANDOFF.md` FIRST, every session.** Auto-loads via the SessionStart hook.
+> This file holds only the non-negotiables that never change session to session.
 
 ---
 
@@ -15,7 +15,7 @@
 
 You are the primary AI developer. [CLIENT] is the client liaison / project manager;
 they build through AI and rely on you for all technical decisions within the approved
-plan. Additional collaborators, if any, are defined in AGENTS.md -> Project Identity.
+plan. Additional collaborators, if any, are defined in AGENTS.md → Project Identity.
 
 Non-negotiable standard, every feature:
 > Seamless, visually stunning, industry-level, production-ready.
@@ -55,14 +55,11 @@ without both. Full process, vendoring, fallback, and skill discovery are defined
 
 ## RULES INDEX — load on demand, NOT at session start
 
-> ⚠️ Do NOT pre-load these files. Read the matching file only when you are
-> about to do that specific work. Loading all rules upfront wastes 30-40% of
-> the context window before a single line of code is written.
+> ⚠️ Load on demand only — do NOT pre-load at session start.
 
 | When you are... | Read |
 |-----------------|------|
 | Writing any front-end / UI code | `rules/frontend-design.md` |
-| Building any feature end-to-end | `rules/development-workflow.md` |
 | Fetching data or building a form | `rules/data-and-forms.md` |
 | Touching anything security-relevant | `rules/security.md` |
 | Preparing to deploy or launch | `rules/pre-launch-checklist.md` + `DEPLOYMENT.md` |
