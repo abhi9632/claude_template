@@ -1,42 +1,44 @@
-# rules/quality.md — Code quality, components, accessibility, performance, bundle size
+# rules/quality.md — Components, accessibility, performance
 
-## Code quality
-- TypeScript strict mode (`noUncheckedIndexedAccess` on). No `any`: narrow `unknown`.
-  No exceptions; if a third-party type genuinely can't be satisfied, isolate it behind
-  a typed wrapper with a one-line comment explaining why.
-- Validate all external data (forms, env at the edge).
-- No `console.log` in production — use the error tracker.
-- CSP-safe scripts; no inline event handlers. Tear down listeners/timers on navigation.
+> Code quality standards (TypeScript strict, zod, no console.log, co-located scripts,
+> framework-specific cleanup) live in AGENTS.md -> CODE QUALITY STANDARDS — not here.
 
 ## Bundle size discipline
-Any animation/scroll/video library (GSAP, Lottie, video players, etc.) must stay off
-the critical path: import only the plugins/modules actually used (no full-bundle
-default imports), and load them via dynamic `import()` gated behind a viewport or
-intersection check, never unconditionally on every page. Per-page JS budget (gzipped)
-should stay under ~75KB outside of explicitly heavy, isolated features (embeds,
-scroll-video, etc.). After touching such code, check the build output sizes and flag
-any new chunk that pushes a page over budget in `HANDOFF.md` > Standing blockers.
+
+Keep heavy client-side dependencies off the critical path:
+- Import only the specific plugins/modules actually used, never the full bundle.
+- Load heavy libraries via dynamic `import()` inside a co-located `<script>`,
+  gated behind a viewport/intersection check; never in a script that runs on every
+  page load regardless of whether the feature is used.
+- Set a per-page JS (gzipped) budget and enforce it after touching animation/library
+  code (`npm run build`, then check bundle sizes).
 
 ## Component authoring
-> **RULE 0 (blocking):** invoke `frontend-design` AND `design-taste-frontend` BEFORE
-> any front-end/UI code (`rules/frontend-design.md`). No improvised UI: if a design
-> system is adopted, follow `design-system/`.
 
-1. One component per file, named after what it renders. 2. Typed `Props` interface.
-3. No inline styles — scoped styles or utility classes, using only the project's design
-tokens. 4. Every interactive element: keyboard support + visible focus + aria-label.
-5. Touch targets >= 44x44px. 6. No hardcoded brand text where avoidable; follow the
-content rules in `design-system/README.md` if adopted. 7. Respect
-`prefers-reduced-motion`. 8. Before building a new UI primitive (card, tag, badge,
-pricing tier, etc.), check `design-system/components/*.prompt.md` for an existing spec
-and follow it. If no spec exists yet, design it using `design-taste-frontend`'s
-discipline, build it, then write a new spec file and add it to
-`design-system/components/` (Hook 2 + Hook 10).
+1. One component per file, named after what it renders.
+2. Typed `Props` interface.
+3. No inline styles: scoped `<style>` or utility classes, using only design tokens.
+4. Every interactive element: keyboard support + visible focus + aria-label.
+5. Touch targets >=44x44px.
+6. No hardcoded user-facing brand text outside config/content files; follow project content rules.
+7. Animations respect `prefers-reduced-motion`.
+8. Before building a new UI primitive, check `design-system/components/*.prompt.md` for an existing spec.
 
 ## Accessibility (MANDATORY)
-WCAG 2.1 AA. Skip-to-main link, descriptive alt, labelled inputs, focus-visible, 4.5:1
-contrast, logical heading order, ESC-closable menus with focus management.
+
+WCAG 2.1 AA. Skip-to-main link, descriptive alt, labelled inputs, focus-visible,
+4.5:1 contrast, logical heading order, ESC-closable modals/menus with focus management.
 
 ## Performance (MANDATORY targets)
-Lighthouse >= 90 mobile (target 100), LCP < 2.5s, CLS < 0.1. Ship minimal JS; load heavy
-libs lazily; images WebP/AVIF, sized, lazy below fold; fonts variable + `font-display: swap`.
+
+Lighthouse >=90 mobile (target 100), LCP <2.5s, CLS <0.1. Framework ships minimal JS
+by default; heavy libraries load lazily. Images: modern formats (WebP/AVIF), sized,
+lazy below fold. Fonts: variable where possible, `font-display: swap`.
+
+## Automated testing gate
+
+Add to CI once the project is past early development:
+- **E2E** (e.g. Playwright): key pages return 200, nav works, forms validate, no console errors.
+- **Accessibility** (e.g. axe): WCAG AA on key pages.
+- **Performance** (e.g. Lighthouse CI): asserts Performance targets above.
+- **Broken-link check** against built output.
