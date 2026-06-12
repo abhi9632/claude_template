@@ -53,7 +53,11 @@ without both. Full process, vendoring, fallback, and skill discovery are defined
 
 ---
 
-## RULES INDEX — read the matching file before the work, not before every session
+## RULES INDEX — load on demand, NOT at session start
+
+> ⚠️ Do NOT pre-load these files. Read the matching file only when you are
+> about to do that specific work. Loading all rules upfront wastes 30-40% of
+> the context window before a single line of code is written.
 
 | When you are... | Read |
 |-----------------|------|
@@ -63,8 +67,14 @@ without both. Full process, vendoring, fallback, and skill discovery are defined
 | Touching anything security-relevant | `rules/security.md` |
 | Preparing to deploy or launch | `rules/pre-launch-checklist.md` + `DEPLOYMENT.md` |
 | Writing components / checking a11y + perf + bundle | `rules/quality.md` |
-| Adding a route, component, service, or env var | `AGENTS.md` (architecture facts + tables) |
+| Adding a route, component, service, or env var | `AGENTS.md` ← only read when needed |
 | Finishing a feature | `rules/documentation-hooks.md` |
+
+**Mandatory reads every session (and only these):**
+1. `HANDOFF.md` — auto-loaded by SessionStart hook
+2. This file (`CLAUDE.md`) — session non-negotiables
+
+Everything else is loaded on demand, mid-task, when the table above says so.
 
 ---
 
